@@ -1,0 +1,25 @@
+# Dockerfile
+
+# Base image (we need Node)
+FROM node:12
+
+# Work directory
+WORKDIR /usr/nodeidentityprovider
+
+# Install dependencies
+COPY ./package*.json ./
+
+RUN npm install
+
+# Copy app source code
+COPY ./ ./
+
+# Set environment variables you need (if you need any)
+ENV NODE_ENV='development'
+ENV PORT=4000
+
+# Expose the port 3000 on the container so we can access it
+EXPOSE 4000
+
+# Specify your start command, divided by commas
+CMD [ "node", "server.js" ]

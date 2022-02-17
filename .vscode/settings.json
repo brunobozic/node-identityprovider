@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/08184beb-1d00-4127-9831-c86108967ecb/resourceGroups/appsvc_linux_centralus_basic/providers/Microsoft.Web/sites/nodeidentityapi-bbozic",
+    "appService.deploySubpath": "."
+}

@@ -1,0 +1,44 @@
+{
+    "name": "identity-api",
+    "version": "1.0.0",
+    "description": "Node.js Identity API",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "Node.js Identity API"
+    },
+    "scripts": {
+        "start": "node ./server.js",
+        "start:dev": "nodemon ./server.js"
+    },
+    "dependencies": {
+        "bcryptjs": "^2.4.3",
+        "body-parser": "^1.19.0",
+        "cookie-parser": "^1.4.5",
+        "cors": "^2.8.5",
+        "express": "^4.17.1",
+        "express-jwt": "^6.0.0",
+        "express-winston": "^4.2.0",
+        "jaeger-client": "^3.19.0",
+        "joi": "^17.1.1",
+        "jsonwebtoken": "^8.5.1",
+        "mongodb": "^3.5.7",
+        "mongoose": "^5.9.25",
+        "nodemailer": "^6.4.6",
+        "opentracing": "^0.14.7",
+        "rootpath": "^0.1.2",
+        "swagger-ui-express": "^4.1.4",
+        "winston": "^3.5.1",
+        "yamljs": "^0.3.0"
+    },
+    "devDependencies": {
+        "eslint": "^8.8.0",
+        "eslint-config-airbnb-base": "^15.0.0",
+        "eslint-config-prettier": "^8.3.0",
+        "eslint-plugin-import": "^2.25.4",
+        "husky": "^7.0.4",
+        "lint-staged": "^12.3.3",
+        "nodemon": "^2.0.15",
+        "prettier": "^2.5.1"
+    }
+}
