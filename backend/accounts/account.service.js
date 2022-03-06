@@ -66,21 +66,23 @@ async function authenticate({ email, password, ipAddress }) {
     !account.isVerified ||
     !bcrypt.compareSync(password, account.passwordHash)
   ) {
-    errorHandler.error(`Whoops, Email or password is incorrect: [${email}]`);
-    throw 'Email or password is incorrect'
+    errorHandler.error(`Whoops, Email or password is incorrect: [${email}]`)
+    throw `Whoops, Email or password is incorrect: [${email}]`
   }
 
   try {
-      const jwtToken = generateJwtToken(account)
-  const refreshToken = generateRefreshToken(account, ipAddress)
-  await refreshToken.save()
-  return {
-    ...basicDetails(account),
-    jwtToken,
-    refreshToken: refreshToken.token,
-  }
+    const jwtToken = generateJwtToken(account)
+    const refreshToken = generateRefreshToken(account, ipAddress)
+    await refreshToken.save()
+    return {
+      ...basicDetails(account),
+      jwtToken,
+      refreshToken: refreshToken.token,
+    }
   } catch (error) {
-    errorHandler.error(`Whoops: [${error}]`);
+    errorHandler.error(
+      `Whoops, problem generating tokens: [${error.message}] for email [${email}]`
+    )
   }
 }
 
@@ -88,19 +90,26 @@ async function refreshToken({ token, ipAddress }) {
   const refreshToken = await getRefreshToken(token)
   const { account } = refreshToken
 
-  const newRefreshToken = generateRefreshToken(account, ipAddress)
-  refreshToken.revoked = Date.now()
-  refreshToken.revokedByIp = ipAddress
-  refreshToken.replacedByToken = newRefreshToken.token
-  await refreshToken.save()
-  await newRefreshToken.save()
+  try {
+    const newRefreshToken = generateRefreshToken(account, ipAddress)
+    refreshToken.revoked = Date.now()
+    refreshToken.revokedByIp = ipAddress
+    refreshToken.replacedByToken = newRefreshToken.token
 
-  const jwtToken = generateJwtToken(account)
+    await refreshToken.save()
+    await newRefreshToken.save()
 
-  return {
-    ...basicDetails(account),
-    jwtToken,
-    refreshToken: newRefreshToken.token,
+    const jwtToken = generateJwtToken(account)
+
+    return {
+      ...basicDetails(account),
+      jwtToken,
+      refreshToken: newRefreshToken.token,
+    }
+  } catch (error) {
+    errorHandler.error(
+      `Whoops, problem generating refresh token: [${error.message}] for ip: [${ipAddress}]`
+    )
   }
 }
 
@@ -109,6 +118,7 @@ async function revokeToken({ token, ipAddress }) {
 
   refreshToken.revoked = Date.now()
   refreshToken.revokedByIp = ipAddress
+
   await refreshToken.save()
 }
 
@@ -117,9 +127,13 @@ async function register(params, origin) {
     console.log(
       'We already have this user in the data store (already registered), User email: [' +
         params.email +
-        ' ]',
+        ' ]'
     )
-    errorHandler.error('We already have this user in the data store (already registered), User email: [' + params.email + ' ]');
+    errorHandler.error(
+      'We already have this user in the data store (already registered), User email: [' +
+        params.email +
+        ' ]'
+    )
     return await sendAlreadyRegisteredEmail(params.email, origin)
   }
 
@@ -139,10 +153,12 @@ async function register(params, origin) {
   } catch (error) {
     console.error(
       new Error(
-        `Whoops, wasnt able to save the new accout or to send a verification mail. Reason: [ ${error} ]`
+        `Whoops, wasnt able to save the new accout or to send a verification mail to [ ${params.email} ]. Reason: [ ${error.message} ]`
       )
-    );
-    errorHandler.error(`Whoops, wasnt able to save the new accout or to send a verification mail. Reason: [ ${error} ]`);
+    )
+    errorHandler.error(
+      `Whoops, wasnt able to save the new accout or to send a verification mail to [ ${params.email} ]. Reason: [ ${error.message} ]`
+    )
   }
 }
 
@@ -159,10 +175,12 @@ async function verifyEmail(token) {
   } catch (error) {
     console.error(
       new Error(
-        `Whoops, wasnt able to save the new accout while verifying users email. Reason: [ ${error} ]`
+        `Whoops, wasnt able to save the new accout while verifying users email to [ ${account.email} ]. Reason: [ ${error.message} ]`
       )
-    );
-    errorHandler.error(`Whoops, wasnt able to save the new accout while verifying users email. Reason: [ ${error} ]`);
+    )
+    errorHandler.error(
+      `Whoops, wasnt able to save the new accout while verifying users email to [ ${account.email} ]. Reason: [ ${error.message} ]`
+    )
   }
 }
 
@@ -256,9 +274,9 @@ async function _delete(id) {
 }
 
 async function getAccount(id) {
-  if (!db.isValidId(id)) throw 'Account not found'
+  if (!db.isValidId(id)) throw 'Account with id: [ ' + id + ' ] not found'
   const account = await db.Account.findById(id)
-  if (!account) throw 'Account not found'
+  if (!account) throw 'Account with id: [ ' + id + ' ] not found'
   return account
 }
 

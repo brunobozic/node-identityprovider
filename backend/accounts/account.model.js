@@ -36,6 +36,7 @@ const schema = new Schema({
   updatedBy: { type: String, required: false },
 });
 
+// a virtual property
 schema.virtual('isVerified').get(function () {
   return !!(this.verified || this.passwordReset);
 });
@@ -44,7 +45,7 @@ schema.set('toJSON', {
   virtuals: true,
   versionKey: false,
   transform(doc, ret) {
-    // remove these props when object is serialized
+    // delete meanst -> remove these props when object is serialized
     delete ret._id;
     delete ret.passwordHash;
   },

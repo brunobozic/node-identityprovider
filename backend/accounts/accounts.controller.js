@@ -48,7 +48,11 @@ router.post('/refresh-token', refreshToken)
 router.post('/revoke-token', authorize(), revokeTokenSchema, revokeToken)
 router.post('/register', registerSchema, register)
 router.post('/forgot-password', forgotPasswordSchema, forgotPassword)
-router.post('/validate-reset-token', validateResetTokenSchema, validateResetToken)
+router.post(
+  '/validate-reset-token',
+  validateResetTokenSchema,
+  validateResetToken
+)
 router.post('/reset-password', resetPasswordSchema, resetPassword)
 router.get('/', authorize(Role.Admin), getAll)
 router.post('/', authorize(Role.Admin), createSchema, create)
@@ -141,7 +145,7 @@ function simpleTest(req, res, next) {
     },
   })
 
-  errorHandler.error("simpleTest error (test)")
+  errorHandler.error('simpleTest error (test)')
 
   span.finish()
 
@@ -182,8 +186,7 @@ function register(req, res, next) {
 } */
 
 function verifyEmail(req, res, next) {
-
-  console.log(req.params.token);
+  console.log(req.params.token)
 
   accountService
     .verifyEmail(req.params.token)

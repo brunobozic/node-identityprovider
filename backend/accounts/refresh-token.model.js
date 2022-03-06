@@ -13,10 +13,12 @@ const schema = new Schema({
   replacedByToken: String,
 });
 
+// virtual property
 schema.virtual('isExpired').get(function () {
   return Date.now() >= this.expires;
 });
 
+// virtual property
 schema.virtual('isActive').get(function () {
   return !this.revoked && !this.isExpired;
 });

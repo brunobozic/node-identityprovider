@@ -10,7 +10,7 @@ try {
   mongoose.connect(process.env.MONGODB_URI || config.connectionString, connectionOptions);
   mongoose.Promise = global.Promise;
 } catch (error) {
-  console.error(new Error(`Whoops, something bad happened${error}`));
+  console.error(new Error(`Whoops, something bad happened: ${error}`));
 }
 
 module.exports = {

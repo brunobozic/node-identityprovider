@@ -3,7 +3,7 @@
 Node.js Identity API
 
 - structure separated into `frontend` and `backend`, so in order to work in either of them, your current working directory should be located in
-  a respective path
+  the respective path, so if your working on the node backend, you need to be in the `backend` folder
 - backend (`node.js`) and frontend (`angular 10`) will naturally have different linting, prettifying and test configurations so be mindful of that
 - the reason why I adopted this folder structure is because I will, at some point, want to use `docker-compose` to bring up the entire stack
 
@@ -15,9 +15,11 @@ Node.js Identity API
 - Has a dependency on a mailer subsystem that is needed in order to send email verification tokens to users who wish to register with the service,
   therefore a working email account is needed for this to work in production, otherwise the users will not be able to verify their accounts
 - Has an open api route (swagger UI) located at `root-url/api-docs` route
+- Didnt have time to make a separate repository/ORM layer, but for simple apps this is not a requirement anyhow
 
 ## FRONTEND
 - A simple angular 10 app that uses ugly bootstrap styling 
+- Very basic, does not showcase many things I usually need from day 1 when doing angular development.
 
 # URLs
 - production backend (Azure): https://nodeidentityapi-bbozic.azurewebsites.net/api-docs/
@@ -27,32 +29,37 @@ Node.js Identity API
 
 # Error handling (logging)
 
+- I decided to use Winston, had the best documentation
+
 `npm install winston`
 
 # Email setup
 
-- A newly created Gmail email address can be used to testing purposes, for production this is not recommended
+- A newly created Gmail email address can be used to testing purposes, for production this is, obviously, not recommended
 
 # How to setup the app (backend)
 
-- The main config file is, obviously `config.json`
-- You need to setup your Mongo connection string there in order for the Db connection to be established
+- The main config file is, obviously: `config.json`
+- You need to setup your Mongo connection string in that file in order for the Db connection to be established
 - Email (SMTP) settings need to be configured correctly in `config.json` as well
 - The first user that is created will get an `admin` role assigned to it by default, all the other users will be "regular" users
 
 # How to debug (backend)
 
-- Using VSC you can attach to a running process (thats the easiest way)
-- You can start the proces by using nodemon `server.js` while located (current working directory) in the root directory (backend subfolder)
-- I have also included `launch.json` under sample-launch-settings folder that you need to copy into your .vscode folder
+- Using VSC you can attach to a running process
+- You can start the proces by using `nodemon server.js` while located (current working directory) in the root directory (backend subfolder)
+- I have also included `launch.json` under sample-launch-settings folder that you need to copy into your own `.vscode` folder
 - The above mentioned `launch.json` file holds configuration that will enable you to use `Run => Start debugging` from VSC, whilst using nodemon to monitor changes and restart the app
 
 # Jaeger
+- mostly to be done in the near future
 
 URL: https://edspencer.net/2020/10/13/distributed-tracing-with-node-js/
 
 
 # How to PM2
+
+- to be done in the future
 
 `npm install -g pm2`
 `pm2 start server.js`
@@ -65,6 +72,8 @@ URL: https://edspencer.net/2020/10/13/distributed-tracing-with-node-js/
 
 # Docker stuff
 
+- to be done in the future
+
 `docker build -t nodeidentityprovider .`
 `docker image ls`
 `docker run -p 4000:4000 nodeidentityprovider`
@@ -72,6 +81,8 @@ URL: https://edspencer.net/2020/10/13/distributed-tracing-with-node-js/
 
 
 # How to integrate lint and prettier (backend)
+
+- this is how I setup linter:
 
 `npm install eslint eslint-config-prettier prettier -D`
 
@@ -90,6 +101,8 @@ URL: https://edspencer.net/2020/10/13/distributed-tracing-with-node-js/
 `"extends": ["airbnb-base","prettier"]`
 
 # How to integrate husky commit hook for prettify (backend)
+
+- to be done in the future:
 
 npm i husky lint-staged -D
 
@@ -117,6 +130,7 @@ npx lint-staged
 
 # Rate limiting (express.js) (backend)
 
+- to be done in the future
 - sample code below:
 
 <code>
@@ -133,7 +147,11 @@ app.use(limiter)`
 
 # Consul (discovery service) 
 
+- to be done later
+
 # Load test
+
+- to be done later
 
 `npm install -g loadtest`
 `loadtest http://localhost:4000/api/nocluster -n 1000 -c 100`
@@ -143,7 +161,6 @@ app.use(limiter)`
 ## backend
 - update all npm packages and the package.json file itself
 - introduce pretifier with commit hooks enabled
-- add Winston logger
 - add PM2 for production deploys (not for managed cloud deploys - obviously)
 - PM2 load balancing
 - introduce Traefik + LetsEncrypt (probably not for managed cloud deploys)
@@ -155,5 +172,5 @@ app.use(limiter)`
 - application gateway
 
 ## frontend
--
--
+- go MaterialDesign
+- introduce the classic UI elements as samples (accordion, paginated grid, wizard, treeview, drag and drop etc.)

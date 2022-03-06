@@ -6,6 +6,9 @@
 const nodemailer = require('nodemailer');
 const config = require('../config.json');
 
+// set up our Winston logger (same instance, cached by node)
+const winstonErrorHandler = require('./winston-logger')
+
 module.exports = sendEmail;
 
 async function sendEmail({
@@ -14,18 +17,22 @@ async function sendEmail({
   try {
     const transporter = nodemailer.createTransport(config.smtpOptions);
 
-    transporter.verify().then(console.log).catch(console.error);
+    transporter.verify().then(
+      // maybe log, maybe not
+    ).catch(
+      // log
+    );
     
     await transporter.sendMail({
       from, to, subject, html, function(err, info) {
         if (err) {
-          console.log(err);
+          winstonErrorHandler.error(err.message);;
         } else {
-          console.log(info);
+          winstonErrorHandler.error(info);
         }
       }
     });
   } catch (error) {
-    console.log(new Error(`Whoops, something bad happened: [${error}]`));
+    winstonErrorHandler.error(new Error(`Whoops, something bad happened: [${error}]`));
   }
 }
